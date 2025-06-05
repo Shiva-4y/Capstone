@@ -40,7 +40,7 @@
       <!-- Right-side icons and links -->
       <div class="flex items-center space-x-4 text-sm">
         <a href="{{ url('/login') }}" class="text-gray-700 hover:underline">Login</a>
-        <a href="#" class="text-gray-700 hover:underline">Register</a>
+        <a href="{{ url('/register') }}" class="text-gray-700 hover:underline">Register</a>
         <span class="text-xl cursor-pointer">🌙</span>
         <span class="text-xl cursor-pointer">🛍️</span>
       </div>
