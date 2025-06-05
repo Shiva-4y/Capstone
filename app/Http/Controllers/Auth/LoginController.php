@@ -23,9 +23,16 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        // Attempt to log the user in
+        // Attempt login for all users
         if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
-            // Authentication passed
+            $user = Auth::user();
+
+            // Check for hardcoded admin credentials
+            if ($user->email === 'admin@gmail.com') {
+                return redirect('/admin');
+            }
+
+            // Normal user
             return redirect()->intended('/user_dashboard');
         }
 
@@ -34,7 +41,4 @@ class LoginController extends Controller
             'email' => 'The provided credentials do not match our records.',
         ])->withInput($request->only('email'));
     }
-
-    // Optional: log out
- 
 }
