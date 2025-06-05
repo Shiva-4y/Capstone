@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Product;  // assuming you have a Product model
 
@@ -28,7 +29,7 @@ class ProductController extends Controller
             $imagePath = $request->file('image')->store('products', 'public');
             $validated['image'] = $imagePath;
         }
-
+   $validated['user_id'] = Auth::id();
         // Save product
         Product::create($validated);
 
@@ -37,7 +38,7 @@ class ProductController extends Controller
 
     public function index()
 {
-    $products = Product::latest()->get(); // get all products, newest first
-    return view('user_dashboard', compact('products'));
+       $products = Product::where('user_id', Auth::id())->latest()->get(); // Only user's products
+    return view('products', compact('products')); 
 }
 }

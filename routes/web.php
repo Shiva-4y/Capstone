@@ -22,7 +22,8 @@ Route::get('/register', [RegisterController::class, 'show'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::get('/user_dashboard', function () {
-    return view('user_dashboard');
+    $products = Product::latest()->get();
+    return view('dashboard_home', compact('products'));
 })->middleware('auth');
 
 Route::get('/admin', function () {
@@ -34,4 +35,7 @@ Route::get('/admin', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/user/add-product', [ProductController::class, 'create'])->name('products.create');
     Route::post('/user/add-product', [ProductController::class, 'store'])->name('products.store');
+    Route::get('/user/products', [ProductController::class, 'index'])->name('products.index');
 });
+
+
