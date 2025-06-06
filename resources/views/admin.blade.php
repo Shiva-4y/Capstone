@@ -91,7 +91,7 @@
       💳 Transactions
     </a>
 
-    <a href="#" class="flex items-center gap-2 px-3 py-2 hover:bg-red-100 rounded">
+    <a href="{{ route('admin.sellers') }}" class="flex items-center gap-2 px-3 py-2 hover:bg-red-100 rounded">
       🧑‍💼 Sellers
     </a>
 
@@ -173,7 +173,7 @@
     <p class="col-span-full text-center text-gray-500">No products available.</p>
   @endforelse
 </section>
-      
+     
     </main>
   </body>
 </html>

@@ -146,7 +146,7 @@
     </ul>
   </nav>
 </main>
-<footer></</footer>
+<footer></footer>
 
     </div>
   </body>

@@ -1,11 +1,12 @@
 @extends('user_dashboard')
 
 @section('content')
-  <h2 class="text-2xl font-bold mb-6">📦 My Products</h2>
+  <h2 class="text-2xl font-bold mb-6">📦 Items</h2>
 
-  <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+  <section class="flex flex-wrap gap-4">
     @forelse ($products as $product)
-      <div class="border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition relative">
+      <div class="w-full sm:w-[320px] border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition relative text-base">
+
         <!-- 3-dot menu (top-right corner) -->
         <div class="absolute top-2 right-2">
           <button class="text-gray-600 hover:text-red-500 text-xl" title="Options">⋮</button>

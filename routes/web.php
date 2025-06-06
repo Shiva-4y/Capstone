@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
+
 
 
 
@@ -14,8 +16,10 @@ Route::get('/', function () {
 });
 
 
+
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
+
 
 Route::get('/register', [RegisterController::class, 'show'])->name('register');
 
@@ -36,6 +40,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/add-product', [ProductController::class, 'create'])->name('products.create');
     Route::post('/user/add-product', [ProductController::class, 'store'])->name('products.store');
     Route::get('/user/products', [ProductController::class, 'index'])->name('products.index');
+     Route::get('/user/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+    Route::put('/user/products/{product}', [ProductController::class, 'update'])->name('products.update');
+    Route::delete('/user/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
 });
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/login');
+})->name('logout')->middleware('auth');
 
 

@@ -33,8 +33,56 @@ class ProductController extends Controller
         // Save product
         Product::create($validated);
 
-        return redirect()->route('products.create')->with('success', 'Product added successfully!');
+        return redirect('/user_dashboard')->with('success', 'Product added successfully!');
     }
+
+public function edit(Product $product)
+{
+    // Optional: authorize user owns this product
+    if ($product->user_id !== Auth::id()) {
+        abort(403);
+    }
+
+    return view('crud.EditProduct', compact('product'));
+}
+
+public function update(Request $request, Product $product)
+{
+    if ($product->user_id !== Auth::id()) {
+        abort(403);
+    }
+
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric|min:0',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'description' => 'nullable|string',
+    ]);
+
+    if ($request->hasFile('image')) {
+        // Optionally: delete old image file here if exists
+
+        $imagePath = $request->file('image')->store('products', 'public');
+        $validated['image'] = $imagePath;
+    }
+
+    $product->update($validated);
+
+    return redirect()->route('products.index')->with('success', 'Product updated successfully!');
+}
+
+public function destroy(Product $product)
+{
+    if ($product->user_id !== Auth::id()) {
+        abort(403);
+    }
+
+    // Optionally: delete image file here
+
+    $product->delete();
+
+    return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
+}
 
     public function index()
 {
