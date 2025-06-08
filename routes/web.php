@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\TransactionController;
 
 
 
@@ -51,4 +51,10 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout')->middleware('auth');
 
-
+Route::get('/marketplace', function () {
+    $products = Product::latest()->get();
+    return view('marketplace', compact('products'));
+})->middleware('auth');
+Route::post('/transactions/{product}', [TransactionController::class, 'store'])
+    ->name('transactions.store')
+    ->middleware('auth');
