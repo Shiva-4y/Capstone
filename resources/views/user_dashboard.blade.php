@@ -6,6 +6,8 @@
   <title>User Dashboard</title>
   @vite('resources/css/app.css')
 </head>
+@stack('scripts')
+
 <body class="bg-gray-50 min-h-screen flex">
 
   <!-- Sidebar -->
@@ -19,7 +21,8 @@
     />
     <div>
       <p class="text-lg font-semibold text-red-600">{{ auth()->user()->name }}</p>
-      <a href="#" class="text-sm text-gray-500 hover:underline">View Profile</a>
+      <a href="{{ route('profile.edit') }}" class="text-sm text-gray-500 hover:underline">View Profile</a>
+
     </div>
   </div>
 
@@ -116,6 +119,10 @@
     🔔
     <span class="absolute top-0 right-0 block w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
   </button>
+
+<a href="{{ route('cart.index') }}" class="text-xl hover:text-red-500">🛒</a>
+  
+
 
   <!-- Dropdown -->
   <div id="notification-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-50">

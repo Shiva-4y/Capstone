@@ -6,6 +6,11 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ProductController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\MarketplaceController;
+use App\Http\Controllers\CartController;
 
 
 
@@ -51,4 +56,22 @@ Route::post('/logout', function () {
     return redirect('/login');
 })->name('logout')->middleware('auth');
 
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 
+Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [UserProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/password', [UserProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
+});
+
+Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/remove/{product}', [CartController::class, 'remove'])->name('cart.remove');

@@ -80,7 +80,9 @@
           <label class="flex items-center text-sm text-gray-600">
             <input type="checkbox" name="remember" class="mr-2"> Remember me
           </label>
-          <a href="#" class="text-sm text-red-500 hover:underline">Forgot password?</a>
+          <a href="{{ route('password.request') }}" class="text-sm text-red-500 hover:underline">
+  Forgot password?
+</a>
         </div>
 
         <!-- Submit Button -->
