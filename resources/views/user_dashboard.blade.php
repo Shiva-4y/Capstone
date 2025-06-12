@@ -19,7 +19,7 @@
     />
     <div>
       <p class="text-lg font-semibold text-red-600">{{ auth()->user()->name }}</p>
-      <a href="#" class="text-sm text-gray-500 hover:underline">View Profile</a>
+      <a href="{{ route('profile.edit') }}" class="text-sm text-gray-500 hover:underline">View Profile</a>
     </div>
   </div>
 
@@ -45,11 +45,12 @@
         </a>
       </li>
 
-      <li>
-        <a href="{{ url('/marketplace') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
-          🛒 <span>Marketplace</span>
-        </a>
-      </li>
+    <li>
+  <a href="{{ url('/marketplace') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
+    🛒 <span>Marketplace</span>
+  </a>
+</li>
+
 
       
 
