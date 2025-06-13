@@ -36,6 +36,8 @@
             id="name"
             name="name"
             required
+            pattern="^[A-Za-z\s]+$"
+            title="Only letters and spaces are allowed"
             placeholder="Your name"
             class="w-full mt-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-400"
           />
@@ -61,30 +63,34 @@
         </div>
 
         <!-- Password -->
-        <div>
+        <div class="relative">
           <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
           <input
             type="password"
             id="password"
             name="password"
             required
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$"
+            title="Password must be at least 8 characters and include uppercase, lowercase, and a special character"
             placeholder="••••••••"
-            class="w-full mt-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-400"
+            class="w-full mt-1 px-4 py-2 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-400"
           />
+          <span
+            class="absolute inset-y-0 right-3 top-8 flex items-center cursor-pointer"
+            onclick="togglePassword('password', this)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
+            </svg>
+          </span>
           @error('password')
             <p class="text-sm text-red-500 mt-1">{{ $message }}</p>
           @enderror
-
-          <div class="mt-1 text-sm">
-            <label class="inline-flex items-center">
-              <input type="checkbox" class="mr-2" onclick="document.getElementById('password').type = this.checked ? 'text' : 'password';" />
-              Show password
-            </label>
-          </div>
         </div>
 
         <!-- Confirm Password -->
-        <div>
+        <div class="relative">
           <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
           <input
             type="password"
@@ -92,8 +98,17 @@
             name="password_confirmation"
             required
             placeholder="••••••••"
-            class="w-full mt-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-400"
+            class="w-full mt-1 px-4 py-2 pr-10 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-400"
           />
+          <span
+            class="absolute inset-y-0 right-3 top-8 flex items-center cursor-pointer"
+            onclick="togglePassword('password_confirmation', this)"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
+            </svg>
+          </span>
         </div>
 
         <!-- Register Button -->
@@ -121,5 +136,24 @@
         <a href="{{ url('/login') }}" class="text-red-500 hover:underline">Log in here</a>
       </div>
     </div>
+
+    <!-- Password Toggle Script -->
+    <script>
+      function togglePassword(inputId, iconEl) {
+        const input = document.getElementById(inputId);
+        const isHidden = input.type === "password";
+        input.type = isHidden ? "text" : "password";
+
+        // Toggle eye icon
+        iconEl.innerHTML = isHidden
+          ? `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.964 9.964 0 012.195-3.356M3 3l18 18" />
+            </svg>`
+          : `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
+            </svg>`;
+      }
+    </script>
   </body>
 </html>

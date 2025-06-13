@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\ChatController;
-
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -75,3 +75,8 @@ Route::get('/messages', [ChatController::class, 'conversationList'])->name('chat
 Route::get('/chat/{productId}/{receiverId}', [ChatController::class, 'chat'])->name('chat.view');
 Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 
+Route::middleware('auth')->group(function () {
+    Route::post('/transactions/buy/{productId}', [TransactionController::class, 'store'])->name('transactions.buy');
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::post('/transactions/{id}/release', [TransactionController::class, 'release'])->name('transaction.release'); // simulate admin releasing
+});
