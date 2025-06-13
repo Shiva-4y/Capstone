@@ -60,7 +60,7 @@
             </button>
           </form>
 
-          <a href="#"
+          <a href="{{ route('chat', ['product' => $product->id, 'receiver' => $product->user_id]) }}"
             class="block mt-2 text-center bg-blue-600 text-white py-2 rounded transform transition duration-200 hover:bg-blue-700 hover:scale-[1.03]">
             💬 Message Seller
           </a>

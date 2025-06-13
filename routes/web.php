@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\MarketplaceController;
+use App\Http\Controllers\ChatController;
 
 
 Route::get('/', function () {
@@ -65,4 +66,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/chat/{product}/{receiver}', [ChatController::class, 'chat'])->name('chat');
+    Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
+});
+Route::get('/messages', [ChatController::class, 'conversationList'])->name('chat.messages');
+Route::get('/chat/{productId}/{receiverId}', [ChatController::class, 'chat'])->name('chat.view');
+Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 

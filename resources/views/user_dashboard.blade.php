@@ -33,17 +33,13 @@
         </a>
       </li>
 
-      <li>
-        <a href="{{ route('products.create') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 text-red-600 font-semibold transition">
-          ➕ <span>Add Product</span>
-        </a>
-      </li>
+    
 
-      <li>
-        <a href="{{ route('products.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
-          📦 <span>My Products</span>
-        </a>
-      </li>
+     <li>
+  <a href="{{ route('products.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
+    👕 <span>Virtual Wardrobe</span>
+  </a>
+</li>
 
     <li>
   <a href="{{ url('/marketplace') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
@@ -61,7 +57,7 @@
       </li>
 
       <li>
-        <a href="#" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
+        <a href="{{ route('chat.messages') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
           💬 <span>Messages</span>
         </a>
       </li>
