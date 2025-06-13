@@ -64,4 +64,22 @@ class TransactionController extends Controller
 
         return back()->with('success', 'Escrow released to seller.');
     }
+    public function confirm($id)
+{
+    $transaction = Transaction::findOrFail($id);
+
+    if ($transaction->buyer_id !== Auth::id()) {
+        return back()->with('error', 'Unauthorized.');
+    }
+
+    if ($transaction->status !== 'pending') {
+        return back()->with('info', 'This transaction is already in process.');
+    }
+
+    $transaction->status = 'paid'; // You could simulate "payment"
+    $transaction->save();
+
+    return back()->with('success', 'You have confirmed the purchase. Waiting for seller to release.');
+}
+
 }

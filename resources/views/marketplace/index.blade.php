@@ -12,59 +12,64 @@
 @if($products->isEmpty())
   <p class="text-gray-600">No products listed yet.</p>
 @else
-  <section class="flex flex-wrap gap-4">
+  <section class="flex flex-wrap gap-4" x-data="{ expanded: null }">
     @foreach ($products as $product)
-      <div class="w-full sm:w-[320px] border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition relative text-base group">
-
-        <!-- 3-dot Report Menu -->
-        <div class="absolute top-2 right-2 z-20">
-          <button 
-            class="text-gray-600 hover:text-red-500 text-xl focus:outline-none"
-            onclick="toggleMenu(this)"
-            type="button"
-          >⋮</button>
-
-          <div class="dropdown-menu hidden absolute right-0 mt-2 w-24 bg-white border border-gray-300 rounded shadow">
-            <form action="#" method="POST" onsubmit="return confirm('Report this product?');">
-              @csrf
-              <button type="submit" class="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-100">
-                Report
-              </button>
-            </form>
+      <div 
+        class="w-full sm:w-[320px] border border-gray-300 rounded-lg p-4 shadow hover:shadow-lg transition relative text-base bg-white cursor-pointer"
+        @click="expanded === {{ $product->id }} ? expanded = null : expanded = {{ $product->id }}"
+      >
+        <!-- Collapsed View -->
+        <template x-if="expanded !== {{ $product->id }}">
+          <div>
+            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+              class="w-full h-48 object-cover rounded mb-3">
+            <h3 class="text-lg font-semibold mb-1">{{ $product->name }}</h3>
+            <p class="text-red-600 font-bold">₱{{ number_format($product->price, 2) }}</p>
+            <p class="text-sm text-gray-600 mb-2">👤 {{ $product->user->name ?? 'Unknown' }}</p>
+            <p class="text-gray-700 text-sm">{{ Str::limit($product->description, 50) }}</p>
           </div>
-        </div>
+        </template>
 
-        <!-- Seller Info -->
-        <p class="text-sm text-gray-500 mb-2">
-          👤 Added by: <span class="font-medium">{{ $product->user->name ?? 'Unknown' }}</span>
-        </p>
+        <!-- Expanded View -->
+        <template x-if="expanded === {{ $product->id }}">
+  <div @click.stop>
+    <div class="flex justify-between items-center mb-2">
+      <h3 class="text-xl font-semibold">{{ $product->name }}</h3>
+      <button class="text-gray-500 hover:text-red-500 text-lg" @click.stop="expanded = null">✖</button>
+    </div>
 
-        <!-- Product Image -->
-        @if($product->image)
-          <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-48 object-cover rounded mb-4">
-        @else
-          <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-400 rounded mb-4">No Image</div>
-        @endif
+    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+      class="w-full h-64 object-cover rounded mb-4">
 
-        <!-- Product Info -->
-        <h3 class="text-lg font-semibold mb-1">{{ $product->name }}</h3>
-        <p class="text-red-600 font-bold mb-1">₱{{ number_format($product->price, 2) }}</p>
-        <p class="text-gray-700 text-sm mb-3">{{ Str::limit($product->description, 60) }}</p>
+    <p class="text-red-600 text-lg font-bold mb-1">₱{{ number_format($product->price, 2) }}</p>
+    <p class="text-sm text-gray-700 mb-2">👤 Seller: {{ $product->user->name ?? 'Unknown' }}</p>
+    <p class="text-gray-800 mb-4">{{ $product->description }}</p>
 
-        <!-- Add to Cart or Message Seller -->
-        @if(auth()->id() !== $product->user_id)
-          <form action="#" method="POST">
-            @csrf
-            <button class="w-full bg-red-600 text-white py-2 rounded transform transition duration-200 hover:bg-red-700 hover:scale-[1.03]">
-              🛒 Add to Cart
-            </button>
-          </form>
+    <!-- Message Form -->
+    @if(auth()->id() !== $product->user_id)
+      <form action="{{ route('chat.send') }}" method="POST" class="space-y-2">
+          @csrf
+          <input type="hidden" name="receiver_id" value="{{ $product->user_id }}">
+          <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-          <a href="{{ route('chat', ['product' => $product->id, 'receiver' => $product->user_id]) }}"
-            class="block mt-2 text-center bg-blue-600 text-white py-2 rounded transform transition duration-200 hover:bg-blue-700 hover:scale-[1.03]">
-            💬 Message Seller
-          </a>
-        @endif
+          <textarea 
+              name="message"
+              rows="2"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-blue-200 text-sm"
+              placeholder="Is this still available?"
+              required
+          ></textarea>
+
+          <button 
+              type="submit"
+              class="w-full bg-blue-600 text-white py-2 rounded text-sm font-medium hover:bg-blue-700 transition"
+          >
+              Send Message
+          </button>
+      </form>
+    @endif
+  </div>
+</template>
       </div>
     @endforeach
   </section>
@@ -72,20 +77,6 @@
 @endsection
 
 @push('scripts')
-<script>
-  function toggleMenu(button) {
-    const dropdown = button.nextElementSibling;
-    document.querySelectorAll('.dropdown-menu').forEach(menu => {
-      if (menu !== dropdown) menu.classList.add('hidden');
-    });
-    dropdown.classList.toggle('hidden');
-  }
-
-  document.addEventListener('click', function (e) {
-    const insideMenu = e.target.closest('.dropdown-menu') || e.target.closest('button[onclick^="toggleMenu"]');
-    if (!insideMenu) {
-      document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.add('hidden'));
-    }
-  });
-</script>
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 @endpush

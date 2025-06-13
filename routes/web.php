@@ -79,4 +79,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/transactions/buy/{productId}', [TransactionController::class, 'store'])->name('transactions.buy');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
     Route::post('/transactions/{id}/release', [TransactionController::class, 'release'])->name('transaction.release'); // simulate admin releasing
+    Route::post('/transaction/confirm/{id}', [TransactionController::class, 'confirm'])->name('transaction.confirm');
+
 });
