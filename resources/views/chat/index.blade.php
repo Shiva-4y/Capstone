@@ -46,15 +46,21 @@
 
     <!-- Buy Now Button -->
     @if(auth()->id() !== $product->user_id)
-        <form action="{{ route('transactions.buy', ['productId' => $product->id]) }}" method="POST" class="text-center">
-            @csrf
-            <button 
-                type="submit" 
-                class="w-full md:w-1/2 bg-green-600 text-white py-3 rounded text-lg font-semibold hover:bg-green-700 transition"
-            >
-                🛒 Buy Now
-            </button>
-        </form>
+  <form 
+    action="{{ route('transactions.buy', ['productId' => $product->id]) }}" 
+    method="POST" 
+    class="text-center"
+    onsubmit="return confirm('Are you sure you want to buy this item? This will create a transaction and notify the seller.')"
+>
+    @csrf
+    <button 
+        type="submit" 
+        class="w-full md:w-1/2 bg-green-600 text-white py-3 rounded text-lg font-semibold hover:bg-green-700 transition"
+    >
+        🛒 Buy Now
+    </button>
+</form>
+
     @endif
 </div>
 @endsection

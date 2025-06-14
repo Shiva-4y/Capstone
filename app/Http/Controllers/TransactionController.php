@@ -21,7 +21,7 @@ class TransactionController extends Controller
         return view('transactions.index', compact('transactions'));
     }
 
-    // Buy now
+    // Buyer initiates transaction
     public function store(Request $request, $productId)
     {
         $product = Product::findOrFail($productId);
@@ -43,43 +43,80 @@ class TransactionController extends Controller
             'buyer_id' => Auth::id(),
             'seller_id' => $product->user_id,
             'product_id' => $productId,
-            'status' => 'pending', // waiting for payment / escrow hold
+            'status' => 'pending',
         ]);
 
         return back()->with('success', 'Transaction created. Waiting for payment...');
     }
 
-    // Admin or system "releases" escrow payment to seller
-    public function release($id)
+    // Buyer marks as paid
+    public function markAsPaid($id)
     {
-        $transaction = Transaction::findOrFail($id);
+        $tx = Transaction::findOrFail($id);
 
-        // Optional: only admin or seller can do this
-        if ($transaction->status !== 'paid') {
-            return back()->with('error', 'Payment not confirmed yet.');
+        if ($tx->buyer_id !== Auth::id() || $tx->status !== 'pending') {
+            abort(403);
         }
 
-        $transaction->status = 'released';
-        $transaction->save();
+        $tx->status = 'paid';
+        $tx->save();
 
-        return back()->with('success', 'Escrow released to seller.');
-    }
-    public function confirm($id)
-{
-    $transaction = Transaction::findOrFail($id);
-
-    if ($transaction->buyer_id !== Auth::id()) {
-        return back()->with('error', 'Unauthorized.');
+        return back()->with('success', 'Marked as paid. Waiting for seller.');
     }
 
-    if ($transaction->status !== 'pending') {
-        return back()->with('info', 'This transaction is already in process.');
+    // Seller releases item
+    public function release($id)
+    {
+        $tx = Transaction::findOrFail($id);
+
+        if ($tx->seller_id !== Auth::id() || $tx->status !== 'paid') {
+            abort(403);
+        }
+
+        $tx->status = 'released';
+        $tx->save();
+
+        return back()->with('success', 'Product released to buyer.');
     }
 
-    $transaction->status = 'paid'; // You could simulate "payment"
-    $transaction->save();
+    // Buyer completes transaction
+    public function complete($id)
+    {
+        $tx = Transaction::findOrFail($id);
 
-    return back()->with('success', 'You have confirmed the purchase. Waiting for seller to release.');
-}
+        if ($tx->buyer_id !== Auth::id() || $tx->status !== 'released') {
+            abort(403);
+        }
+
+        $tx->status = 'completed';
+        $tx->save();
+
+        return back()->with('success', 'Transaction completed successfully.');
+    }
+
+    // Cancel transaction (buyer or seller)
+    public function cancel(Request $request, $id)
+    {
+        $tx = Transaction::findOrFail($id);
+
+        if ($tx->buyer_id !== Auth::id() && $tx->seller_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if (!in_array($tx->status, ['pending', 'paid'])) {
+            return back()->with('error', 'Cannot cancel at this stage.');
+        }
+
+        $request->validate([
+            'cancel_reason' => 'required|string|max:255',
+        ]);
+
+        $tx->status = 'cancelled';
+        $tx->cancel_reason = $request->cancel_reason;
+        $tx->save();
+
+        return back()->with('success', 'Transaction cancelled.');
+    }
+
 
 }
