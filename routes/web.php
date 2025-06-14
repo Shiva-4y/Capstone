@@ -76,13 +76,16 @@ Route::get('/chat/{productId}/{receiverId}', [ChatController::class, 'chat'])->n
 Route::post('/chat/send', [ChatController::class, 'send'])->name('chat.send');
 
 Route::middleware('auth')->group(function () {
-    Route::post('/transactions/buy/{productId}', [TransactionController::class, 'store'])->name('transactions.buy');
-    Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
-    Route::post('/transactions/{id}/release', [TransactionController::class, 'release'])->name('transaction.release'); // simulate admin releasing
-    Route::post('/transaction/confirm/{id}', [TransactionController::class, 'confirm'])->name('transaction.confirm');
-Route::post('/transaction/pay/{id}', [TransactionController::class, 'markAsPaid'])->name('transaction.pay');
-Route::post('/transaction/release/{id}', [TransactionController::class, 'release'])->name('transaction.release');
-Route::post('/transaction/complete/{id}', [TransactionController::class, 'complete'])->name('transaction.complete');
-Route::post('/transaction/cancel/{id}', [TransactionController::class, 'cancel'])->name('transaction.cancel');
+    Route::post('/transaction/buy/{productId}', [TransactionController::class, 'store'])->name('transactions.buy');
 
+    Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction.index');
+
+    Route::post('/transaction/pay/{id}', [TransactionController::class, 'markAsPaid'])->name('transaction.pay');
+ Route::post('/transactions/{id}/mark-paid', [TransactionController::class, 'markAsPaid'])->name('transaction.markPaid');
+    Route::post('/transactions/{id}/release', [TransactionController::class, 'release'])->name('transaction.release');
+    Route::post('/transactions/{id}/complete', [TransactionController::class, 'complete'])->name('transaction.complete');
+    Route::post('/transactions/{id}/cancel', [TransactionController::class, 'cancel'])->name('transaction.cancel');
+
+
+    Route::get('/seller/orders', [TransactionController::class, 'sellerOrders'])->name('seller.orders');
 });

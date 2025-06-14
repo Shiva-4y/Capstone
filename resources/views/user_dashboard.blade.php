@@ -47,14 +47,11 @@
   </a>
 </li>
 
-
-      
-
       <li>
-        <a href="#" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
-          🧾 <span>Order History</span>
-        </a>
-      </li>
+  <a href="{{ route('transaction.index') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">
+    🧾 <span>Order History</span>
+  </a>
+</li>
 
       <li>
         <a href="{{ route('chat.messages') }}" class="flex items-center gap-2 px-3 py-2 rounded hover:bg-red-50 transition">

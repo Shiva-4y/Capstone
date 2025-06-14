@@ -18,7 +18,7 @@ class TransactionController extends Controller
             ->latest()
             ->get();
 
-        return view('transactions.index', compact('transactions'));
+        return view('transaction.index', compact('transactions'));
     }
 
     // Buyer initiates transaction
@@ -117,6 +117,16 @@ class TransactionController extends Controller
 
         return back()->with('success', 'Transaction cancelled.');
     }
+
+public function sellerOrders()
+{
+    $transactions = Transaction::where('seller_id', Auth::id())
+        ->with(['product', 'buyer'])
+        ->latest()
+        ->get();
+
+    return view('transactions.seller_orders', compact('transactions'));
+}
 
 
 }
